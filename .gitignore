@@ -1,0 +1,20 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments & secrets
+.venv/
+venv/
+env/
+.env
+.env.*
+
+# Local binaries
+cloudflared.exe
+
+# IDE & OS files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

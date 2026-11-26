@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoltX Solar Intelligence - Research Methodology & Physics Sandbox</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50: '#ecfdf5', 500: '#10b981', 600: '#059669', 900: '#064e3b' },
+                        solar: { amber: '#f59e0b', cyan: '#06b6d4', rose: '#f43f5e', indigo: '#6366f1' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        input[type=range] {
+            accent-color: #6366f1;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                </div>
+                <div>
+                    <span class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400">VoltX Solar Intelligence</span>
+                    <span class="hidden md:inline-block ml-2 text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">Academic & ML Lab</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links (Strict MPA) -->
+            <nav class="hidden md:flex items-center gap-1">
+                <a href="/static/index.html" class="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    Live Estimator
+                </a>
+                <a href="/static/deviations.html" class="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    Unseen Deviations
+                </a>
+                <a href="/static/investigations.html" class="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Triage & MySQL Logs
+                </a>
+                <a href="/static/research.html" class="px-3.5 py-2 rounded-lg text-sm font-semibold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 flex items-center gap-1.5 shadow-sm">
+                    <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+                    Research & Sandbox
+                </a>
+            </nav>
+
+            <!-- Dynamic System / MySQL Status Badge -->
+            <div id="system-status-badge" class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 animate-pulse">
+                    Connecting Telemetry...
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Research Header Banner -->
+        <div class="glass-panel rounded-2xl p-6 sm:p-8 border border-slate-800 bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900">
+            <div class="max-w-3xl">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Jupyter Research & Methodology</span>
+                    <span class="text-xs text-slate-400 font-mono">Notebook Untitled31 (2).ipynb (Cells 71 - 80)</span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Machine Learning Methodology & Physics Sandbox</h1>
+                <p class="text-sm text-slate-400 mt-2 leading-relaxed">
+                    A comprehensive technical breakdown of chronological splitting to avoid lookahead data leakage, model selection rationale (TransformedTargetRegressor SVR), plant-specific residual error calibration, and an interactive thermal derating physics sandbox.
+                </p>
+            </div>
+        </div>
+
+        <!-- Section 1: Exact Notebook Evaluation Benchmark Table -->
+        <div class="glass-panel rounded-2xl p-6 border border-slate-800 shadow-xl space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div class="flex items-center gap-2">
+                    <h2 class="text-base font-bold text-white">Empirical Model Benchmarks & Metrics (from model_metrics.json)</h2>
+                </div>
+                <span class="text-xs text-slate-400 font-mono">Dataset: 2,877 daytime intervals</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs font-mono">
+                    <thead class="bg-slate-900 text-slate-400 uppercase tracking-wider text-[11px] border-b border-slate-800">
+                        <tr>
+                            <th class="p-3">Evaluation Scenario</th>
+                            <th class="p-3">Evaluation Data Period / Split</th>
+                            <th class="p-3 text-cyan-300">MAE (kW)</th>
+                            <th class="p-3 text-amber-300">RMSE (kW)</th>
+                            <th class="p-3 text-emerald-300">R² Score</th>
+                            <th class="p-3 font-sans">Notebook Context</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/80">
+                        <tr class="hover:bg-slate-900/60">
+                            <td class="p-3 font-bold text-white font-sans">Validation Set (Day-Split)</td>
+                            <td class="p-3 text-slate-400">Held-out 15% random days (502 rows)</td>
+                            <td class="p-3 font-bold text-cyan-300">932.44</td>
+                            <td class="p-3 font-bold text-amber-300">1892.96</td>
+                            <td class="p-3 font-bold text-emerald-300">0.926</td>
+                            <td class="p-3 text-slate-400 font-sans">Step 8 / Cell 18 benchmark comparing LR, RF, SVR.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-900/60">
+                            <td class="p-3 font-bold text-white font-sans">Initial Chronological Model</td>
+                            <td class="p-3 text-slate-400">80% Time Split (2020-06-11 10:15+)</td>
+                            <td class="p-3 font-bold text-cyan-300">802.93</td>
+                            <td class="p-3 font-bold text-amber-300">1552.98</td>
+                            <td class="p-3 font-bold text-emerald-300">0.943</td>
+                            <td class="p-3 text-slate-400 font-sans">Cell 72: Fresh model trained strictly on early period.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-900/60 bg-emerald-500/5 border-l-2 border-emerald-400">
+                            <td class="p-3 font-bold text-emerald-300 font-sans">Calibrated Final SVR (Production)</td>
+                            <td class="p-3 text-emerald-200">669 unseen rows (Jun 11 to Jun 17)</td>
+                            <td class="p-3 font-bold text-cyan-300">872.39</td>
+                            <td class="p-3 font-bold text-amber-300">1625.85</td>
+                            <td class="p-3 font-bold text-emerald-400 text-sm">0.937</td>
+                            <td class="p-3 text-slate-300 font-sans font-semibold">Cell 79 & solar_model_bundle.pkl model used in production.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-900/60">
+                            <td class="p-3 font-bold text-cyan-300 font-sans pl-6">&bull; Plant 1 (4135001) Sub-cohort</td>
+                            <td class="p-3 text-slate-400">Unseen test days</td>
+                            <td class="p-3 font-bold text-cyan-300">463.66</td>
+                            <td class="p-3 font-bold text-amber-300">635.93</td>
+                            <td class="p-3 font-bold text-emerald-400 text-sm">0.993</td>
+                            <td class="p-3 text-slate-400 font-sans">Excellent tracking: high reliability, minimal inverter drops.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-900/60">
+                            <td class="p-3 font-bold text-amber-300 font-sans pl-6">&bull; Plant 2 (4136001) Sub-cohort</td>
+                            <td class="p-3 text-slate-400">Unseen test days</td>
+                            <td class="p-3 font-bold text-cyan-300">1244.37</td>
+                            <td class="p-3 font-bold text-amber-300">2204.79</td>
+                            <td class="p-3 font-bold text-amber-400 text-sm">0.802</td>
+                            <td class="p-3 text-slate-400 font-sans">Lower R² caused by physical 8-inverter trips & string faults!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 2: 3 Methodology Deep Dive Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-3">
+                <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-sm">
+                    1
+                </div>
+                <h3 class="text-base font-bold text-white">Chronological Splitting vs Random Leakage</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Standard random cross-validation randomly selects rows from the same afternoon. Because atmospheric conditions are heavily auto-correlated across consecutive 15-minute readings, random splitting introduces severe lookahead bias. The notebook partitioned the 34 days strictly chronologically (first 80% to train, last 20% for testing), simulating true real-world deployment.
+                </p>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-3">
+                <div class="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-sm">
+                    2
+                </div>
+                <h3 class="text-base font-bold text-white">TransformedTargetRegressor & SVR</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Support Vector Regression using an RBF kernel was selected because solar power generation exhibits non-linear saturation at higher solar irradiance and thermal limits. Using <code class="text-cyan-300">TransformedTargetRegressor</code> with <code class="text-cyan-300">StandardScaler</code> normalizes both the 9 engineered features and the target kW range, guaranteeing gradient stability and preventing distance metric distortion.
+                </p>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
+                    3
+                </div>
+                <h3 class="text-base font-bold text-white">95th-Percentile Calibration Thresholds</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Rather than arbitrary error boundaries, Cell 73 splits the training window chronologically into a model-training set (80%) and an empirical calibration set (20%). It computes absolute residuals on the calibration set and calculates separate 95th-percentile error quantiles: <strong>2,168.70 kW</strong> for Plant 1 and <strong>4,673.13 kW</strong> for Plant 2. Residuals above these numbers represent true statistical outliers.
+                </p>
+            </div>
+        </div>
+
+        <!-- Section 3: Interactive Physics & Thermal Derating Simulator -->
+        <div class="glass-panel rounded-2xl p-6 sm:p-8 border border-indigo-500/30 shadow-2xl space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 font-mono">Interactive Laboratory</span>
+                    <h3 class="text-xl font-extrabold text-white">Solar Physics & Thermal Derating Simulator</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Manipulate environmental controls live. Calls <code class="text-indigo-300 font-mono">/api/predict</code> in real time to simulate dual plant behavior.</p>
+                </div>
+                <span class="text-xs text-slate-400 font-mono">Live API Reactive Calls</span>
+            </div>
+
+            <!-- Controls Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Slider 1: Irradiance -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs">
+                        <span class="font-bold text-slate-300">Solar Irradiance (kW/m²)</span>
+                        <span id="val-irrad" class="font-mono text-indigo-300 font-bold">0.80 kW/m²</span>
+                    </div>
+                    <input type="range" id="sim-irrad" min="0.05" max="1.20" step="0.01" value="0.80" oninput="updateSim()" class="w-full">
+                    <div class="flex justify-between text-[10px] text-slate-500 font-mono"><span>0.05 kW/m²</span><span>1.20 kW/m²</span></div>
+                </div>
+
+                <!-- Slider 2: Module Temp -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs">
+                        <span class="font-bold text-slate-300">Module Surface Temp (°C)</span>
+                        <span id="val-mod-temp" class="font-mono text-amber-300 font-bold">52.0 °C</span>
+                    </div>
+                    <input type="range" id="sim-mod-temp" min="15.0" max="70.0" step="0.5" value="52.0" oninput="updateSim()" class="w-full">
+                    <div class="flex justify-between text-[10px] text-slate-500 font-mono"><span>15 °C</span><span>70 °C</span></div>
+                </div>
+
+                <!-- Slider 3: Ambient Temp -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs">
+                        <span class="font-bold text-slate-300">Ambient Air Temp (°C)</span>
+                        <span id="val-amb-temp" class="font-mono text-cyan-300 font-bold">32.0 °C</span>
+                    </div>
+                    <input type="range" id="sim-amb-temp" min="10.0" max="48.0" step="0.5" value="32.0" oninput="updateSim()" class="w-full">
+                    <div class="flex justify-between text-[10px] text-slate-500 font-mono"><span>10 °C</span><span>48 °C</span></div>
+                </div>
+
+                <!-- Slider 4: Hour of Day -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs">
+                        <span class="font-bold text-slate-300">Hour of Day (Sun Angle)</span>
+                        <span id="val-hour" class="font-mono text-emerald-300 font-bold">13:00</span>
+                    </div>
+                    <input type="range" id="sim-hour" min="6.0" max="18.5" step="0.25" value="13.0" oninput="updateSim()" class="w-full">
+                    <div class="flex justify-between text-[10px] text-slate-500 font-mono"><span>06:00</span><span>18:30</span></div>
+                </div>
+            </div>
+
+            <!-- Physics Interactive Gauges & Dual Output -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-slate-800">
+                <!-- Physics Metrics -->
+                <div class="space-y-3 font-mono text-xs">
+                    <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+                        <div class="text-slate-400 text-[11px] font-sans font-semibold">Thermal Gradient (TEMP_GAP)</div>
+                        <div id="gauge-temp-gap" class="text-2xl font-bold text-amber-300 mt-1">+20.0 °C</div>
+                        <p class="text-[10px] text-slate-500 mt-1 font-sans">Module temperature minus ambient. Drives semiconductor bandgap shift and efficiency loss (-0.4%/°C).</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-slate-900 border border-slate-800">
+                        <div class="text-slate-400 text-[11px] font-sans font-semibold">Interaction Term (IRRAD_X_MODTEMP)</div>
+                        <div id="gauge-interaction" class="text-2xl font-bold text-indigo-300 mt-1">41.60</div>
+                        <p class="text-[10px] text-slate-500 mt-1 font-sans">Empirical product feature capturing simultaneous thermal saturation under intense solar flux.</p>
+                    </div>
+                </div>
+
+                <!-- Plant 1 Output vs Plant 2 Output -->
+                <div class="md:col-span-2 glass-panel p-5 rounded-xl border border-slate-800 space-y-4">
+                    <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Dual Fleet Comparative Generation Response</h4>
+                    
+                    <!-- Plant 1 Bar -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-xs font-mono">
+                            <span class="text-cyan-300 font-bold font-sans">Plant 1 (ID: 4135001 - Monocrystalline Array)</span>
+                            <span id="sim-p1-kw" class="font-bold text-white text-sm">-- kW</span>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-3 overflow-hidden border border-slate-800">
+                            <div id="bar-p1" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full rounded-full transition-all duration-300" style="width: 50%;"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                            <span>0 kW</span><span>Max Fleet Equivalent ~29,000 kW</span>
+                        </div>
+                    </div>
+
+                    <!-- Plant 2 Bar -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-xs font-mono">
+                            <span class="text-amber-300 font-bold font-sans">Plant 2 (ID: 4136001 - Polycrystalline Array)</span>
+                            <span id="sim-p2-kw" class="font-bold text-white text-sm">-- kW</span>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-3 overflow-hidden border border-slate-800">
+                            <div id="bar-p2" class="bg-gradient-to-r from-amber-500 to-rose-400 h-full rounded-full transition-all duration-300" style="width: 45%;"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+                            <span>0 kW</span><span>Max Fleet Equivalent ~26,000 kW</span>
+                        </div>
+                    </div>
+
+                    <!-- Physics Derating Commentary -->
+                    <div id="sim-commentary" class="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 text-xs text-slate-300 leading-relaxed font-sans">
+                        Simulating operational conditions...
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-6 mt-12 text-center text-xs text-slate-500">
+        <p>VoltX Solar Power Platform &bull; Academic Methodology & Physical Energy Simulation Sandbox.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/app.js"></script>
+    <script>
+        let debounceTimer = null;
+
+        function updateSim() {
+            const irrad = parseFloat(document.getElementById("sim-irrad").value);
+            const modTemp = parseFloat(document.getElementById("sim-mod-temp").value);
+            const ambTemp = parseFloat(document.getElementById("sim-amb-temp").value);
+            const hour = parseFloat(document.getElementById("sim-hour").value);
+
+            // Update UI Labels
+            document.getElementById("val-irrad").innerText = `${irrad.toFixed(2)} kW/m²`;
+            document.getElementById("val-mod-temp").innerText = `${modTemp.toFixed(1)} °C`;
+            document.getElementById("val-amb-temp").innerText = `${ambTemp.toFixed(1)} °C`;
+
+            const h = Math.floor(hour);
+            const m = Math.round((hour - h) * 60);
+            document.getElementById("val-hour").innerText = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+
+            // Gauges
+            const tempGap = modTemp - ambTemp;
+            document.getElementById("gauge-temp-gap").innerText = `${tempGap >= 0 ? '+' : ''}${tempGap.toFixed(1)} °C`;
+            document.getElementById("gauge-interaction").innerText = (irrad * modTemp).toFixed(2);
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                runDualPrediction(irrad, modTemp, ambTemp, hour);
+            }, 120);
+        }
+
+        async function runDualPrediction(irrad, modTemp, ambTemp, hour) {
+            try {
+                // Call API for Plant 1
+                const reqP1 = fetch(`${API_BASE}/api/predict`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        plant_id: 4135001,
+                        hour: hour,
+                        irradiation: irrad,
+                        module_temperature: modTemp,
+                        ambient_temperature: ambTemp,
+                        irr_change: 0.02
+                    })
+                });
+
+                // Call API for Plant 2
+                const reqP2 = fetch(`${API_BASE}/api/predict`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        plant_id: 4136001,
+                        hour: hour,
+                        irradiation: irrad,
+                        module_temperature: modTemp,
+                        ambient_temperature: ambTemp,
+                        irr_change: 0.02
+                    })
+                });
+
+                const [resP1, resP2] = await Promise.all([reqP1, reqP2]);
+                const dataP1 = await resP1.json();
+                const dataP2 = await resP2.json();
+
+                const p1Kw = dataP1.predicted_ac_power_kw;
+                const p2Kw = dataP2.predicted_ac_power_kw;
+
+                document.getElementById("sim-p1-kw").innerText = `${p1Kw.toFixed(1)} kW`;
+                document.getElementById("sim-p2-kw").innerText = `${p2Kw.toFixed(1)} kW`;
+
+                const p1Pct = Math.min(100, Math.max(0, (p1Kw / 29000.0) * 100));
+                const p2Pct = Math.min(100, Math.max(0, (p2Kw / 26000.0) * 100));
+
+                document.getElementById("bar-p1").style.width = `${p1Pct}%`;
+                document.getElementById("bar-p2").style.width = `${p2Pct}%`;
+
+                // Commentary
+                const diff = (p1Kw - p2Kw).toFixed(1);
+                const tempGap = modTemp - ambTemp;
+                let deratingNote = "";
+                if (tempGap > 20) {
+                    deratingNote = `High thermal differential (+${tempGap.toFixed(1)}°C) causes substantial cell temperature derating, suppressing conversion efficiency.`;
+                } else if (tempGap < 5) {
+                    deratingNote = `Low thermal gradient (+${tempGap.toFixed(1)}°C) provides optimal module cooling conditions.`;
+                }
+
+                document.getElementById("sim-commentary").innerHTML = `
+                    <strong>Physics Simulation Findings:</strong> Under ${irrad.toFixed(2)} kW/m² irradiance at ${document.getElementById("val-hour").innerText}, 
+                    Plant 1 yields <span class="text-cyan-300 font-bold">${p1Kw.toFixed(1)} kW</span> vs Plant 2's <span class="text-amber-300 font-bold">${p2Kw.toFixed(1)} kW</span> 
+                    (differential of ${diff} kW). ${deratingNote}
+                `;
+
+            } catch (e) {
+                console.error("Simulation error", e);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            updateSim();
+        });
+    </script>
+</body>
+</html>

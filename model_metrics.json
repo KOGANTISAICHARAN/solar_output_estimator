@@ -1,0 +1,64 @@
+{
+    "model_name": "Support Vector Regression (TransformedTargetRegressor)",
+    "features": [
+        "IRRADIATION",
+        "MODULE_TEMPERATURE",
+        "AMBIENT_TEMPERATURE",
+        "TEMP_GAP",
+        "IRRAD_X_MODTEMP",
+        "HOUR_SIN",
+        "HOUR_COS",
+        "PLANT_ENC",
+        "IRR_CHANGE"
+    ],
+    "target": "AC_POWER_PLANT",
+    "plant_mapping": {
+        "4135001": 0,
+        "4136001": 1
+    },
+    "anomaly_thresholds_95th": {
+        "0": 2168.6972538302575,
+        "1": 4673.128173573306
+    },
+    "validation": {
+        "mae": 932.435,
+        "rmse": 1892.959,
+        "r2": 0.926,
+        "description": "Validation performance on held-out days (Step 8 / Cell 18 & 22 of notebook)"
+    },
+    "unseen_chronological_test": {
+        "mae": 872.387,
+        "rmse": 1625.853,
+        "r2": 0.937,
+        "exact_mae": 872.3868445998177,
+        "exact_rmse": 1625.8525932184098,
+        "exact_r2": 0.937401605841036,
+        "evaluation_period": "2020-06-11 10:15:00 to 2020-06-17 18:30:00",
+        "description": "Final calibration model performance on unseen chronological test period (Cell 79 of notebook)"
+    },
+    "chronological_time_model_test": {
+        "mae": 802.934,
+        "rmse": 1552.98,
+        "r2": 0.943,
+        "exact_mae": 802.9335918651919,
+        "exact_rmse": 1552.979971910615,
+        "exact_r2": 0.9428873165549563,
+        "description": "Initial chronological model evaluated on unseen test period (Cell 72 of notebook)"
+    },
+    "day_split_unseen_test": {
+        "mae": 855.308,
+        "rmse": 1624.857,
+        "r2": 0.939,
+        "plant_4135001": {
+            "mae": 463.656,
+            "rmse": 635.929,
+            "r2": 0.993
+        },
+        "plant_4136001": {
+            "mae": 1244.367,
+            "rmse": 2204.792,
+            "r2": 0.802
+        },
+        "description": "Random day-split test set performance (Cell 18 of notebook)"
+    }
+}
