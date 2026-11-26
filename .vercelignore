@@ -1,0 +1,21 @@
+# Non-runtime files excluded from Vercel serverless bundle
+cloudflared.exe
+Untitled31 (2).ipynb
+solar_master_dataset_reviewed.csv1.xls
+VIVA_EVALUATION_GUIDE.md
+run_server.bat
+generate_bundle_and_metrics.py
+init_db.py
+database.sql
+
+# Caches, environments, and git metadata
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.env
+.env.*
+.git/
+.vscode/
+.idea/

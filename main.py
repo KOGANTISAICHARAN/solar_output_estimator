@@ -128,7 +128,9 @@ except Exception as e:
 # -----------------------------------------------------------------------------
 
 def get_db_connection():
-    """Attempt connection to MySQL. Returns (connection, None) or (None, error_str)."""
+    """Attempt connection to MySQL. Returns connection or None."""
+    if os.getenv("VERCEL") and not os.getenv("MYSQL_HOST"):
+        return None
     candidate_passwords = [MYSQL_PASSWORD, "Abbu@123", "", "root", "password"]
     for pwd in candidate_passwords:
         if pwd is None:
